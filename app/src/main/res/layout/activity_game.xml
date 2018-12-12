@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".GameActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.85"
+        android:background="@color/white">
+
+        <ToggleButton
+            android:id="@+id/hammerButton"
+            android:layout_width="42dp"
+            android:layout_height="77dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/hammer_check"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:textOff=""
+            android:textOn=""/>
+
+        <ToggleButton
+            android:id="@+id/plierButton"
+            android:layout_width="42dp"
+            android:layout_height="77dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="133dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/plier_check"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:textOff=""
+            android:textOn="" />
+
+        <ToggleButton
+            android:id="@+id/screwdriverButton"
+            android:layout_width="42dp"
+            android:layout_height="77dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="222dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/screwdriver_check"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:textOff=""
+            android:textOn="" />
+
+        <ToggleButton
+            android:id="@+id/handButton"
+            android:layout_width="42dp"
+            android:layout_height="77dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="310dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/hand_check"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:textOff=""
+            android:textOn=""/>
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.15"
+        android:background="@color/colorAccent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.22"
+                android:background="@drawable/board">
+
+                <Button
+                    android:id="@+id/fanButton"
+                    android:layout_width="162dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="29dp"
+                    android:layout_marginEnd="0dp"
+                    android:background="@drawable/fan" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.78"
+                android:background="@color/colorPrimary">
+
+
+                <Button
+                    android:id="@+id/testButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginBottom="0dp"
+                    android:text="Test" />
+
+                <ToggleButton
+                    android:id="@+id/fanLogoButton"
+                    android:layout_width="51dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="19dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="422dp"
+                    android:background="@drawable/fan_check"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:textOff=""
+                    android:textOn=""
+                    android:visibility="invisible" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+
+</LinearLayout>
