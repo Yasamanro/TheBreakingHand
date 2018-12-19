@@ -1,6 +1,7 @@
 package com.example.yasamanro.bhangarigame;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Vibrator;
 import android.support.v7.app.AlertDialog;
@@ -23,6 +24,7 @@ public class TestActivity extends AppCompatActivity {
         final Button shakeButton = findViewById(R.id.shakeButton);
         Button touchButton = findViewById(R.id.touchButton);
         Button plugButton = findViewById(R.id.plugButton);
+        Button decideButton = findViewById(R.id.decideButton);
 
         ImageView currentObject = null;
         final MediaPlayer shakeSound = MediaPlayer.create(this,R.raw.shake);
@@ -62,5 +64,13 @@ public class TestActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Shake it!", Toast.LENGTH_SHORT).show();
                 }
             });
+
+        decideButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(TestActivity.this, DecideActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }
