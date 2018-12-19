@@ -2,6 +2,7 @@ package com.example.yasamanro.bhangarigame;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -100,7 +101,7 @@ public class GameActivity extends AppCompatActivity {
                     }
                 }
             }
-        });
+    });
 
         test.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,6 +114,10 @@ public class GameActivity extends AppCompatActivity {
                 }
                 else {
                     Intent intent = new Intent(GameActivity.this, TestActivity.class);
+                    Bundle b = new Bundle();
+                    b.putString("part","fan");                   // Part
+                    intent.putExtras(b);                         //Put part id to next Intent
+                    startActivity(intent);
                     startActivity(intent);
                 }
             }
