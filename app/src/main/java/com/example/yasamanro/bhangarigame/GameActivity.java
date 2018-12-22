@@ -96,7 +96,7 @@ public class GameActivity extends AppCompatActivity {
                         count++;
                     }
                     else { // You broke the fan!
-                        fan.setVisibility(View.GONE);
+                       // fan.setVisibility(View.GONE);
                         fanlogoButton.setVisibility(View.VISIBLE);
                     }
                 }
