@@ -69,6 +69,9 @@ public class TestActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(TestActivity.this, DecideActivity.class);
+                Bundle b = new Bundle();
+                b.putString("part","fan");                   // Part
+                intent.putExtras(b);                         //Put part id to next Intent
                 startActivity(intent);
             }
         });

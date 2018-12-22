@@ -4,63 +4,54 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/table"
     android:orientation="vertical"
     tools:context=".DecideActivity">
 
     <RelativeLayout
-        android:id="@+id/bottomLayout"
+        android:id="@+id/tableLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.75">
+        android:background="@drawable/table">
 
-        <Button
+        <ImageView
+            android:id="@+id/glassBasket"
             android:layout_width="75dp"
             android:layout_height="75dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="115dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/Glass" />
+            android:background="@drawable/glass"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"/>
 
-        <Button
+        <ImageView
+            android:id="@+id/plasticBasket"
             android:layout_width="75dp"
             android:layout_height="75dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="100dp"
-            android:background="@drawable/Metal" />
+            android:background="@drawable/plastic"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="100dp"/>
 
-        <Button
+        <ImageView
+            android:id="@+id/paperBasket"
             android:layout_width="75dp"
             android:layout_height="75dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="10dp"
-            android:background="@drawable/Paper" />
+            android:background="@drawable/paper"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="200dp"/>
 
-        <Button
+        <ImageView
+            android:id="@+id/metalBasket"
             android:layout_width="75dp"
             android:layout_height="75dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/Plastic" />
+            android:background="@drawable/metal"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="300dp"/>
 
+        <ImageView
+            android:id="@+id/fanObject"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/fan" />
     </RelativeLayout>
-
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0.25">
-    </RelativeLayout>
-
-
-
-
 
 </LinearLayout>

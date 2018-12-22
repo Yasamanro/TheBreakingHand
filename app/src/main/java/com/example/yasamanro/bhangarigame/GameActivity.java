@@ -1,14 +1,20 @@
 package com.example.yasamanro.bhangarigame;
 
+import android.animation.ObjectAnimator;
 import android.content.Intent;
-import android.graphics.Color;
-import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -19,22 +25,40 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-
-        // Tools
+        // Tools in toolbar
         final ToggleButton hammer = findViewById(R.id.hammerButton);
         final ToggleButton plier = findViewById(R.id.plierButton);
         final ToggleButton screwdriver = findViewById(R.id.screwdriverButton);
         final ToggleButton hand = findViewById(R.id.handButton);
 
+        // Tools in action
+        final Button hammerTool = findViewById(R.id.hammerTool);
 
-        //Parts
+        //Hardware Parts
         final Button fan = findViewById(R.id.fanButton);
 
-        //Logos
-        final ToggleButton fanlogoButton = findViewById(R.id.fanLogoButton);
+        //Highlights --?
+        final Button hammerHighlight = findViewById(R.id.hammerHighlight);
+      //  final Button fanHighlight = findViewById(R.id.fanHighlight);
 
-        //Test Button
+        //Test and score
         Button test = findViewById(R.id.testButton);
+        final TextView basketCount = findViewById(R.id.badge_notification_text);
+        final TextView score = findViewById(R.id.score);
+
+        //Blink Animation
+        final Animation blinkAnimation = new AlphaAnimation(1, 0); // Change alpha from fully invisible to visible
+        blinkAnimation.setDuration(500); // duration - half a second
+        blinkAnimation.setInterpolator(new LinearInterpolator()); // do not alter animation rate
+        blinkAnimation.setRepeatCount(3); // Repeat animation infinitely
+        blinkAnimation.setRepeatMode(Animation.REVERSE); // Reverse animation at the end so the button will fade back in
+
+        //Animation (rotate, swirl, move)
+        final Animation rotateAnimation = AnimationUtils.loadAnimation(this, R.anim.rotate_anim);
+        final Animation swirlAnimation = AnimationUtils.loadAnimation(this,R.anim.swirl_animation);
+//        final Animation moveAnimation = AnimationUtils.loadAnimation(this,R.anim.trainfade);
+        final TranslateAnimation animation = new TranslateAnimation(0.0f, 400.0f,
+                0.0f, 100f);
 
 
         hammer.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -82,22 +106,36 @@ public class GameActivity extends AppCompatActivity {
         });
 
         fan.setOnClickListener(new View.OnClickListener() {
-
-            int count = 0;
+            int fanTapCount = 0;
 
             @Override
             public void onClick(View v) {
                 if (!hammer.isChecked()){
                     Toast.makeText(getApplicationContext(), "Select The Hammer first!", Toast.LENGTH_SHORT).show();
+                    hammer.startAnimation(blinkAnimation);
+                    v.clearAnimation();
+                   // hammerHighlight.setVisibility(View.INVISIBLE);
                 }
                 else {
-                    if (count < 5) { // Fan not broken yet!
-                        Toast.makeText(getApplicationContext(), "Click " + (5 - count) + " more times!", Toast.LENGTH_SHORT).show();
-                        count++;
+                    if (fanTapCount < 5) { // Fan not broken yet!
+                        Toast.makeText(getApplicationContext(), "Tap " + (5 - fanTapCount) + " more times!", Toast.LENGTH_SHORT).show();
+                        fan.clearAnimation();
+                        hammerTool.startAnimation(rotateAnimation);
+                        fanTapCount++;
                     }
                     else { // You broke the fan!
-                        fan.setVisibility(View.GONE);
-                        fanlogoButton.setVisibility(View.VISIBLE);
+                        hammerTool.startAnimation(rotateAnimation);
+                      //  fan.setVisibility(View.GONE);
+                        //fanHighlight.setVisibility(View.GONE);
+                        int basketCountTemp = Integer.parseInt(basketCount.getText().toString())+1;
+                        basketCount.setText(Integer.toString(basketCountTemp));
+                        int scoreCountTemp = Integer.parseInt(score.getText().toString())+1;
+                        score.setText(Integer.toString(scoreCountTemp));
+
+                        AnimationSet s = new AnimationSet(false);
+                        s.addAnimation(swirlAnimation);
+                        s.addAnimation(animation);
+                        fan.startAnimation(s);
                     }
                 }
             }
@@ -106,18 +144,13 @@ public class GameActivity extends AppCompatActivity {
         test.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (fanlogoButton.getVisibility() == View.INVISIBLE){
+                if (Integer.parseInt(basketCount.getText().toString()) <= 0){
                     Toast.makeText(getApplicationContext(), "You haven't dismantled anything!\nBreak something first!", Toast.LENGTH_SHORT).show();
-                }
-                else if (!fanlogoButton.isChecked()) {
-                    Toast.makeText(getApplicationContext(), "Select the fan first!", Toast.LENGTH_SHORT).show();
-                }
-                else {
+                } else {
                     Intent intent = new Intent(GameActivity.this, TestActivity.class);
                     Bundle b = new Bundle();
                     b.putString("part","fan");                   // Part
                     intent.putExtras(b);                         //Put part id to next Intent
-                    startActivity(intent);
                     startActivity(intent);
                 }
             }

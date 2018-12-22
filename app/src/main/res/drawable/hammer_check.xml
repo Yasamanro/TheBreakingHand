@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-<!-- When selected, use grey -->
+<!-- When selected, use selected mode-->
 <item android:drawable="@drawable/hammer_selected"
     android:state_checked="true" />
-<!-- When not selected, use white-->
+<!-- When not selected, use unselected mode-->
 <item android:drawable="@drawable/hammer_unselected"
     android:state_checked="false"/>
-
 </selector>
