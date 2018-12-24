@@ -10,7 +10,9 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity">
+        tools:context=".MainActivity"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="16dp">
 
         <ImageView
             android:layout_width="match_parent"
@@ -51,9 +53,21 @@
             android:layout_height="wrap_content"
             android:layout_alignEnd="@+id/playButton"
             android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
             android:layout_marginEnd="-14dp"
             android:layout_marginBottom="161dp"
             android:text="How To Play" />
+
+        <Button
+            android:id="@+id/connect_to_glove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginEnd="115dp"
+            android:layout_marginBottom="81dp"
+            android:text="Connect to Glove" />
 
     </RelativeLayout>
 

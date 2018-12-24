@@ -1,10 +1,14 @@
 package com.example.yasamanro.bhangarigame;
 
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothManager;
-import android.content.Context;
+import android.Manifest;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,7 +17,8 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int REQUEST_ENABLE_BT = 1;
+    private int LOCATION_PERMISSION_CODE = 1;
+    private boolean permissionGranted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,12 +27,17 @@ public class MainActivity extends AppCompatActivity {
 
         Button playButton = findViewById(R.id.playButton);
         Button howButton = findViewById(R.id.howButton);
+        Button connectButton = findViewById(R.id.connect_to_glove);
 
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, GameActivity.class);
-                startActivity(intent);
+                if (permissionGranted) {
+                    Intent intent = new Intent(MainActivity.this, GameActivity.class);
+                    startActivity(intent);
+                } else {
+                    requestLocationPermission();
+                }
             }
         });
 
@@ -38,16 +48,40 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        connectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    toastMessage("You have already granted access!");
+                    Intent intent = new Intent(MainActivity.this, ScanActivity.class);
+                    startActivity(intent);
+                } else {
+                    requestLocationPermission();
+                }
+            }
+        });
+    }
 
+    private void requestLocationPermission(){
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION) && !permissionGranted){
+            new AlertDialog.Builder(this)
+                    .setTitle("Permission needed")
+                    .setMessage("This permission is needed to detect the smart glove.")
+                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION_CODE);
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).create().show();
 
-        // Bluetooth stuff
-        BluetoothAdapter mBluetoothAdapter;
-        final BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);           // Initialize Bluetooth adapter.
-        mBluetoothAdapter = bluetoothManager.getAdapter();
-        // Ensures Bluetooth is available on the device and it is enabled. If not, displays a dialog requesting user permission to enable Bluetooth.
-        if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+        }else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION_CODE);
         }
     }
 
@@ -72,4 +106,20 @@ public class MainActivity extends AppCompatActivity {
     private void toastMessage(String message) {
         Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == LOCATION_PERMISSION_CODE)  {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                permissionGranted = true;
+                Toast.makeText(this, "Permission GRANTED", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this, ScanActivity.class);
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "Permission DENIED", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
 }
