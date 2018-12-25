@@ -23,16 +23,27 @@ import java.util.HashMap;
  */
 public class SampleGattAttributes {
     private static HashMap<String, String> attributes = new HashMap();
+
     public static String HEART_RATE_MEASUREMENT = "00002a37-0000-1000-8000-00805f9b34fb";
     public static String CLIENT_CHARACTERISTIC_CONFIG = "00002902-0000-1000-8000-00805f9b34fb";
 
+
+    // Micro's Info
+    public static String CHARACTERSITIC_UUID = "beb5483e-36e1-4688-b7f5-ea07361b26a8";
+    public static String SERVICE_UUID = "4fafc201-1fb5-459e-8fcc-c5c9c331914b";
+
     static {
+        attributes.put(SERVICE_UUID,"Service UUID");
+       // attributes.put(CHARACTERSITIC_UUID,"Character")
+
+
+
         // Sample Services.
         attributes.put("0000180d-0000-1000-8000-00805f9b34fb", "Heart Rate Service");
         attributes.put("0000180a-0000-1000-8000-00805f9b34fb", "Device Information Service");
         // Sample Characteristics.
         attributes.put(HEART_RATE_MEASUREMENT, "Heart Rate Measurement");
-        attributes.put("00002a29-0000-1000-8000-00805f9b34fb", "Manufacturer Name String");
+       // attributes.put("00002a29-0000-1000-8000-00805f9b34fb", "Manufacturer Name String");
     }
 
     public static String lookup(String uuid, String defaultName) {

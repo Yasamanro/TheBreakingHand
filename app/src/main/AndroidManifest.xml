@@ -28,7 +28,8 @@
         <activity android:name=".GameActivity" />
         <activity android:name=".TestActivity" />
         <activity android:name=".DecideActivity" />
-        <activity android:name=".DeviceScanActivity"></activity>
+        <activity android:name=".DeviceScanActivity" />
+        <activity android:name=".ScanActivity"></activity>
     </application>
 
 </manifest>

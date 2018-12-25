@@ -18,7 +18,6 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 
     private int LOCATION_PERMISSION_CODE = 1;
-    private boolean permissionGranted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (permissionGranted) {
+                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     Intent intent = new Intent(MainActivity.this, GameActivity.class);
                     startActivity(intent);
                 } else {
@@ -53,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     toastMessage("You have already granted access!");
-                    Intent intent = new Intent(MainActivity.this, DeviceScanActivity.class);
+                    Intent intent = new Intent(MainActivity.this, ScanActivity.class);
                     startActivity(intent);
                 } else {
                     requestLocationPermission();
@@ -63,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void requestLocationPermission(){
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION) && !permissionGranted){
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION)){
             new AlertDialog.Builder(this)
                     .setTitle("Permission needed")
                     .setMessage("This permission is needed to detect the smart glove.")
@@ -111,9 +110,8 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == LOCATION_PERMISSION_CODE)  {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                permissionGranted = true;
                 Toast.makeText(this, "Permission GRANTED", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MainActivity.this, DeviceScanActivity.class);
+                Intent intent = new Intent(MainActivity.this, ScanActivity.class);
                 startActivity(intent);
             } else {
                 Toast.makeText(this, "Permission DENIED", Toast.LENGTH_SHORT).show();
