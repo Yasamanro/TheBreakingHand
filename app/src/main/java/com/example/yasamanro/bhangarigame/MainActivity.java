@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     toastMessage("You have already granted access!");
-                    Intent intent = new Intent(MainActivity.this, ScanActivity.class);
+                    Intent intent = new Intent(MainActivity.this, DeviceScanActivity.class);
                     startActivity(intent);
                 } else {
                     requestLocationPermission();
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 permissionGranted = true;
                 Toast.makeText(this, "Permission GRANTED", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MainActivity.this, ScanActivity.class);
+                Intent intent = new Intent(MainActivity.this, DeviceScanActivity.class);
                 startActivity(intent);
             } else {
                 Toast.makeText(this, "Permission DENIED", Toast.LENGTH_SHORT).show();
