@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    toastMessage("You have already granted access!");
                     Intent intent = new Intent(MainActivity.this, ScanActivity.class);
                     startActivity(intent);
                 } else {

@@ -28,8 +28,9 @@
         <activity android:name=".GameActivity" />
         <activity android:name=".TestActivity" />
         <activity android:name=".DecideActivity" />
-        <activity android:name=".DeviceScanActivity" />
+        <activity android:name=".DeviceControlActivity" />
         <activity android:name=".ScanActivity"></activity>
+    <service android:name=".BluetoothLeService" android:enabled="true"/>
     </application>
 
 </manifest>

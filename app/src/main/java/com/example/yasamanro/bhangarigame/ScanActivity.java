@@ -3,6 +3,7 @@ package com.example.yasamanro.bhangarigame;
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
@@ -13,9 +14,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +36,7 @@ public class ScanActivity extends AppCompatActivity {
     private BluetoothLeScanner mBluetoothLeScanner;
     private ScanCallback mScanCallback;
     private HashMap<String,BluetoothDevice> mScanResults = new HashMap<>();
+    private BluetoothGatt mBluetoothGatt;
 
     private boolean mScanning;
     private Handler mHandler;
@@ -40,10 +45,16 @@ public class ScanActivity extends AppCompatActivity {
     private int LOCATION_PERMISSION_CODE = 1;
     private static final long SCAN_PERIOD = 10000;                           // Stops scanning after 10 seconds
 
+    private boolean gloveFound;
+    private BluetoothDevice glove;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan);
+
+        Button connectBtn = findViewById(R.id.connectButton);
+        Button scanBtn = findViewById(R.id.scanButton);
 
         // Use this check to determine whether BLE is supported on the device.  Then you can
         // selectively disable BLE-related features.
@@ -65,7 +76,31 @@ public class ScanActivity extends AppCompatActivity {
             return;
         }
 
-        startScan();
+        scanBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startScan();
+            }
+        });
+
+        connectBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (gloveFound){
+                    final Intent intent = new Intent(ScanActivity.this, DeviceControlActivity.class);
+                    intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME, glove.getName());
+                    intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_ADDRESS, glove.getAddress());
+                    if (mScanning) {
+                        stopScan();
+                        mScanning = false;
+                    }
+                    startActivity(intent);
+                  //  mBluetoothGatt = glove.connectGatt(this,true, mGattCallback);
+                } else {
+                    Toast.makeText(ScanActivity.this, "Scan for The Smart Glove first!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     @Override
@@ -117,10 +152,14 @@ public class ScanActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        gloveFound = true;
+                        glove = device;
                         TextView deviceName = (TextView) findViewById(R.id.device_name);
                         deviceName.setText("Smart Glovest");
                         TextView deviceAddr = (TextView) findViewById(R.id.device_address);
                         deviceAddr.setText(device.getAddress());
+                        TextView deviceConn = (TextView) findViewById(R.id.connection_state);
+                        deviceConn.setText("Disconnected");
                     }
                 });
             }
