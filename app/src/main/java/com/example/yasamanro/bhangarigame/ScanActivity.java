@@ -155,7 +155,7 @@ public class ScanActivity extends AppCompatActivity {
                         gloveFound = true;
                         glove = device;
                         TextView deviceName = (TextView) findViewById(R.id.device_name);
-                        deviceName.setText("Smart Glovest");
+                        deviceName.setText("Smart Glove");
                         TextView deviceAddr = (TextView) findViewById(R.id.device_address);
                         deviceAddr.setText(device.getAddress());
                         TextView deviceConn = (TextView) findViewById(R.id.connection_state);

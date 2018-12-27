@@ -16,7 +16,6 @@
 
 package com.example.yasamanro.bhangarigame;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.content.BroadcastReceiver;
@@ -28,16 +27,16 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.SimpleExpandableListAdapter;
 import android.widget.TextView;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -121,34 +120,45 @@ public class DeviceControlActivity extends AppCompatActivity {
     // http://d.android.com/reference/android/bluetooth/BluetoothGatt.html for the complete
     // list of supported characteristic features.
     private final ExpandableListView.OnChildClickListener servicesListClickListner =
-            new ExpandableListView.OnChildClickListener() {
-                @Override
-                public boolean onChildClick(ExpandableListView parent, View v, int groupPosition,
-                                            int childPosition, long id) {
-                    if (mGattCharacteristics != null) {
-                        final BluetoothGattCharacteristic characteristic =
-                                mGattCharacteristics.get(groupPosition).get(childPosition);
-                        final int charaProp = characteristic.getProperties();
-                        if ((charaProp | BluetoothGattCharacteristic.PROPERTY_READ) > 0) {
-                            // If there is an active notification on a characteristic, clear
-                            // it first so it doesn't update the data field on the user interface.
-                            if (mNotifyCharacteristic != null) {
-                                mBluetoothLeService.setCharacteristicNotification(
-                                        mNotifyCharacteristic, false);
-                                mNotifyCharacteristic = null;
-                            }
-                            mBluetoothLeService.readCharacteristic(characteristic);
-                        }
-                        if ((charaProp | BluetoothGattCharacteristic.PROPERTY_NOTIFY) > 0) {
-                            mNotifyCharacteristic = characteristic;
+        new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition,
+                                        int childPosition, long id) {
+                if (mGattCharacteristics != null) {
+                    final BluetoothGattCharacteristic characteristic =
+                            mGattCharacteristics.get(groupPosition).get(childPosition);
+                    final int charaProp = characteristic.getProperties();
+                    if ((charaProp | BluetoothGattCharacteristic.PROPERTY_READ) > 0) {
+                        // If there is an active notification on a characteristic, clear
+                        // it first so it doesn't update the data field on the user interface.
+                        if (mNotifyCharacteristic != null) {
                             mBluetoothLeService.setCharacteristicNotification(
-                                    characteristic, true);
+                                    mNotifyCharacteristic, false);
+                            mNotifyCharacteristic = null;
                         }
-                        return true;
+                        mBluetoothLeService.readCharacteristic(characteristic);
+
+
+                        characteristic.getPermissions();
+
+                        byte[] dataInput = characteristic.getValue();
+                        String s1 = Arrays.toString(dataInput);
+                        Log.d("READ CHARACTERSITCI YASAMAN JAN", s1);
+
+
+
+
                     }
-                    return false;
+                    if ((charaProp | BluetoothGattCharacteristic.PROPERTY_NOTIFY) > 0) {
+                        mNotifyCharacteristic = characteristic;
+                        mBluetoothLeService.setCharacteristicNotification(
+                                characteristic, true);
+                    }
+                    return true;
                 }
-    };
+                return false;
+            }
+        };
 
     private void clearUI() {
         mGattServicesList.setAdapter((SimpleExpandableListAdapter) null);
@@ -158,30 +168,36 @@ public class DeviceControlActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.gatt_services_characteristics);
+        setContentView(R.layout.activity_device_control);
 
         final Intent intent = getIntent();
         mDeviceName = intent.getStringExtra(EXTRAS_DEVICE_NAME);
         mDeviceAddress = intent.getStringExtra(EXTRAS_DEVICE_ADDRESS);
 
         // Sets up UI references.
+        ((TextView) findViewById(R.id.device_name)).setText(mDeviceName);
         ((TextView) findViewById(R.id.device_address)).setText(mDeviceAddress);
+        ((TextView) findViewById(R.id.connection_state)).setText(R.string.disconnected);
         mGattServicesList = (ExpandableListView) findViewById(R.id.gatt_services_list);
         mGattServicesList.setOnChildClickListener(servicesListClickListner);
         mConnectionState = (TextView) findViewById(R.id.connection_state);
         mDataField = (TextView) findViewById(R.id.data_value);
 
-//        getSupportActionBar().setTitle(mDeviceName);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
 
-        Button connect = findViewById(R.id.button4);
+        Button playGame = findViewById(R.id.playGameButton);
 
-        connect.setOnClickListener(new View.OnClickListener(){
+        playGame.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                mBluetoothLeService.connect(mDeviceAddress);
+                if (mConnectionState.getText().equals("Connected")) {
+                    Intent intent = new Intent(DeviceControlActivity.this, GameActivity.class);
+                    startActivity(intent);
+                }
+                else {
+                    Toast.makeText(DeviceControlActivity.this, "The device must be connected before starting the game!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -209,35 +225,6 @@ public class DeviceControlActivity extends AppCompatActivity {
         unbindService(mServiceConnection);
         mBluetoothLeService = null;
     }
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.gatt_services, menu);
-//        if (mConnected) {
-//            menu.findItem(R.id.menu_connect).setVisible(false);
-//            menu.findItem(R.id.menu_disconnect).setVisible(true);
-//        } else {
-//            menu.findItem(R.id.menu_connect).setVisible(true);
-//            menu.findItem(R.id.menu_disconnect).setVisible(false);
-//        }
-//        return true;
-//    }
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch(item.getItemId()) {
-//            case R.id.menu_connect:
-//                mBluetoothLeService.connect(mDeviceAddress);
-//                return true;
-//            case R.id.menu_disconnect:
-//                mBluetoothLeService.disconnect();
-//                return true;
-//            case android.R.id.home:
-//                onBackPressed();
-//                return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
 
     private void updateConnectionState(final int resourceId) {
         runOnUiThread(new Runnable() {

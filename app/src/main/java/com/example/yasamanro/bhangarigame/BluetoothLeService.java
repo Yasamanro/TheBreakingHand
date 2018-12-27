@@ -32,6 +32,7 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -104,6 +105,24 @@ public class BluetoothLeService extends Service {
                                          int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
+
+                Log.d("JAN CHARACTERISTIC SERVICE", characteristic.getService().toString());
+
+                Log.d("JAN CHARACTERISTIC PROPERTIES", "" + characteristic.getProperties());
+
+                Log.d("JAN CHARACTERISTIC PERMISSIONS", "" + characteristic.getPermissions());
+
+                byte[] dataInput = characteristic.getValue();
+                String s1 = Arrays.toString(dataInput);
+                Log.d("READ CHARACTERSITCI YASAMAN JAN VALUE", s1);
+
+                byte[] dataOutput = {10,10,5,5};
+                characteristic.setValue(dataOutput);
+                String s2 = Arrays.toString(dataOutput);
+                Log.d("WRITTEN CHARACTERSITCI YASAMAN JAN VALUE", s2);
+
+                broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
+
             }
         }
 
