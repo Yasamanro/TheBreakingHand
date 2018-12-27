@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,13 +31,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+/*
+Handles finding BLE devices, filtering out the glove that we are looking for
+*/
 public class ScanActivity extends AppCompatActivity {
 
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothLeScanner mBluetoothLeScanner;
     private ScanCallback mScanCallback;
     private HashMap<String,BluetoothDevice> mScanResults = new HashMap<>();
-    private BluetoothGatt mBluetoothGatt;
 
     private boolean mScanning;
     private Handler mHandler;
@@ -47,6 +51,8 @@ public class ScanActivity extends AppCompatActivity {
 
     private boolean gloveFound;
     private BluetoothDevice glove;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,11 +153,15 @@ public class ScanActivity extends AppCompatActivity {
         }
         for (String deviceAddress : mScanResults.keySet()) {
             BluetoothDevice device = mScanResults.get(deviceAddress);
-            Log.d("HELLOFOUNDDEVICES", "Found device: " + deviceAddress);
+            Log.d("FOUNDDEVICES", "Found device: " + deviceAddress);
             if (device.getName() != null && device.getName().equals("SmartGlove")){
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+
+                        ((ImageView) findViewById(R.id.glove_unselected)).setVisibility(View.INVISIBLE);
+                        ((ImageView) findViewById(R.id.glove_selected)).setVisibility(View.VISIBLE);
+
                         gloveFound = true;
                         glove = device;
                         TextView deviceName = (TextView) findViewById(R.id.device_name);
@@ -211,4 +221,7 @@ public class ScanActivity extends AppCompatActivity {
     private void requestLocationPermission() {
         requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION_CODE);
     }
+
+    @Override
+    public void onBackPressed() { }
 }
