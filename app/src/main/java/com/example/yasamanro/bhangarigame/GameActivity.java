@@ -1,8 +1,10 @@
 package com.example.yasamanro.bhangarigame;
 
 import android.animation.ObjectAnimator;
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
@@ -34,6 +36,7 @@ public class GameActivity extends AppCompatActivity {
     private BluetoothGattService mBluetoothGattService;
     final String SERVICE_UUID = "4fafc201-1fb5-459e-8fcc-c5c9c331914b";
     final String CHARACTERISTIC_UUID = "beb5483e-36e1-4688-b7f5-ea07361b26a8";
+    ArrayList<String> brokenItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,14 @@ public class GameActivity extends AppCompatActivity {
 
         //Hardware Parts
         final Button fan = findViewById(R.id.fanButton);
+        final Button fan1 = findViewById(R.id.fanButton1);
+        final Button fan2 = findViewById(R.id.fanButton2);
+        final Button fan3 = findViewById(R.id.fanButton3);
+        final Button fan4 = findViewById(R.id.fanButton4);
+        final Button fan5 = findViewById(R.id.fanButton5);
+
+        // Basket
+        final Button basket = findViewById(R.id.basket);
 
         //Highlights --?
         final Button hammerHighlight = findViewById(R.id.hammerHighlight);
@@ -77,6 +88,9 @@ public class GameActivity extends AppCompatActivity {
 
         // Sounds
         final MediaPlayer hitMetalSound = MediaPlayer.create(this,R.raw.hitmetal);
+
+        // Broken Items
+        brokenItems = new ArrayList<>();
 
         // Get BluetoothGattService data from DeviceControlActivity Intent!
 //        Bundle b = getIntent().getExtras();
@@ -131,7 +145,37 @@ public class GameActivity extends AppCompatActivity {
             }
         });
 
-        fan.setOnClickListener(new View.OnClickListener() {
+        basket.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // setup the alert builder
+                AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
+                builder.setTitle("Basket Content");
+
+                // Make an array of broken items to show
+                String[] arr = brokenItems.toArray(new String[brokenItems.size()]);
+                builder.setItems(arr, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0: // horse
+                            case 1: // cow
+                            case 2: // camel
+                            case 3: // sheep
+                            case 4: // goat
+                        }
+                    }
+                });
+
+                // create and show the alert dialog
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
+
+
+
+                fan.setOnClickListener(new View.OnClickListener() {
             int fanTapCount = 0;
 
             @Override
@@ -146,6 +190,86 @@ public class GameActivity extends AppCompatActivity {
 
 //                    writeOnMicro(mBluetoothGattService, CHARACTERISTIC_UUID, 0);
                     Log.d("wrote on micro", "0");
+
+//                    switch (fanTapCount){
+//                        case 0:
+//                            hitMetalSound.start();
+//                            Toast.makeText(getApplicationContext(), "Tap " + (5 - fanTapCount) + " more times!", Toast.LENGTH_SHORT).show();
+//                            fan.clearAnimation();
+//                            hammerTool.startAnimation(rotateAnimation);
+//                            fanTapCount++;
+//                            break;
+//                        case 1:
+//                            fan.setVisibility(View.GONE);
+//                            fan1.setVisibility(View.VISIBLE);
+//                            hitMetalSound.start();
+//                            Toast.makeText(getApplicationContext(), "Tap " + (5 - fanTapCount) + " more times!", Toast.LENGTH_SHORT).show();
+//                            fan1.clearAnimation();
+//                            hammerTool.startAnimation(rotateAnimation);
+//                            fanTapCount++;
+//                            break;
+//
+//                        case 2:
+//                            fan1.setVisibility(View.GONE);
+//                            fan2.setVisibility(View.VISIBLE);
+//                            hitMetalSound.start();
+//                            Toast.makeText(getApplicationContext(), "Tap " + (5 - fanTapCount) + " more times!", Toast.LENGTH_SHORT).show();
+//                            fan2.clearAnimation();
+//                            hammerTool.startAnimation(rotateAnimation);
+//                            fanTapCount++;
+//                            break;
+//
+//                        case 3:
+//                            fan2.setVisibility(View.GONE);
+//                            fan3.setVisibility(View.VISIBLE);
+//                            hitMetalSound.start();
+//                            Toast.makeText(getApplicationContext(), "Tap " + (5 - fanTapCount) + " more times!", Toast.LENGTH_SHORT).show();
+//                            fan3.clearAnimation();
+//                            hammerTool.startAnimation(rotateAnimation);
+//                            fanTapCount++;
+//                            break;
+//
+//                        case 4:
+//                            fan3.setVisibility(View.GONE);
+//                            fan4.setVisibility(View.VISIBLE);
+//                            hitMetalSound.start();
+//                            Toast.makeText(getApplicationContext(), "Tap " + (5 - fanTapCount) + " more times!", Toast.LENGTH_SHORT).show();
+//                            fan4.clearAnimation();
+//                            hammerTool.startAnimation(rotateAnimation);
+//                            fanTapCount++;
+//                            break;
+//
+//                        case 5:
+//                            fan4.setVisibility(View.GONE);
+//                            fan5.setVisibility(View.VISIBLE);
+//                            hitMetalSound.start();
+//                            Toast.makeText(getApplicationContext(), "Tap " + (5 - fanTapCount) + " more times!", Toast.LENGTH_SHORT).show();
+//                            fan5.clearAnimation();
+//                            hammerTool.startAnimation(rotateAnimation);
+//                            fanTapCount++;
+//                            break;
+//
+//                        default:
+//                            hitMetalSound.start();
+//                            hammerTool.startAnimation(rotateAnimation);
+//                            //  fan.setVisibility(View.GONE);
+//                            //fanHighlight.setVisibility(View.GONE);
+//                            int basketCountTemp = Integer.parseInt(basketCount.getText().toString())+1;
+//                            basketCount.setText(Integer.toString(basketCountTemp));
+//                            int scoreCountTemp = Integer.parseInt(score.getText().toString())+1;
+//                            score.setText(Integer.toString(scoreCountTemp));
+//
+//                            AnimationSet s = new AnimationSet(false);
+//
+//                            s.addAnimation(swirlAnimation);
+//                            s.addAnimation(animation);
+//                            fan5.startAnimation(s);
+//
+//                            brokenItems.add("Fan");
+//                            fanTapCount++;
+//                            break;
+//                    }
+
 
                     if (fanTapCount < 5) { // Fan not broken yet!
                         hitMetalSound.start();
@@ -169,6 +293,8 @@ public class GameActivity extends AppCompatActivity {
                         s.addAnimation(swirlAnimation);
                         s.addAnimation(animation);
                         fan.startAnimation(s);
+
+                        brokenItems.add("Fan");
                         fanTapCount++;
                     }
                     else {

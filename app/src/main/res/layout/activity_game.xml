@@ -123,7 +123,62 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginTop="25dp"
                     android:layout_marginEnd="18dp"
-                    android:background="@drawable/fan" />
+                    android:background="@drawable/fan"/>
+
+                <Button
+                    android:id="@+id/fanButton1"
+                    android:layout_width="161dp"
+                    android:layout_height="167dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginEnd="18dp"
+                    android:background="@drawable/fan1"
+                    android:visibility="invisible"/>
+
+                <Button
+                    android:id="@+id/fanButton2"
+                    android:layout_width="161dp"
+                    android:layout_height="167dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginEnd="18dp"
+                    android:background="@drawable/fan2"
+                    android:visibility="invisible"/>
+
+                <Button
+                    android:id="@+id/fanButton3"
+                    android:layout_width="161dp"
+                    android:layout_height="167dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginEnd="18dp"
+                    android:background="@drawable/fan3"
+                    android:visibility="invisible"/>
+
+                <Button
+                    android:id="@+id/fanButton4"
+                    android:layout_width="161dp"
+                    android:layout_height="167dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginEnd="18dp"
+                    android:background="@drawable/fan4"
+                    android:visibility="invisible"/>
+
+                <Button
+                    android:id="@+id/fanButton5"
+                    android:layout_width="161dp"
+                    android:layout_height="167dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginEnd="18dp"
+                    android:background="@drawable/fan5"
+                    android:visibility="invisible"/>
 
                 <Button
                     android:id="@+id/hammerTool"
@@ -222,7 +277,8 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="370dp"
-                    android:text="0" />
+                    android:text="0"
+                    android:textColor="@color/white"/>
 
             </RelativeLayout>
 
