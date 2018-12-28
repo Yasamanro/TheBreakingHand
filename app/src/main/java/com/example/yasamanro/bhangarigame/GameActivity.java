@@ -1,9 +1,12 @@
 package com.example.yasamanro.bhangarigame;
 
 import android.animation.ObjectAnimator;
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattService;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -18,7 +21,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+
+import static android.provider.Contacts.SettingsColumns.KEY;
+
 public class GameActivity extends AppCompatActivity {
+
+    private BluetoothGattService mBluetoothGattService;
+    final String SERVICE_UUID = "4fafc201-1fb5-459e-8fcc-c5c9c331914b";
+    final String CHARACTERISTIC_UUID = "beb5483e-36e1-4688-b7f5-ea07361b26a8";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +74,14 @@ public class GameActivity extends AppCompatActivity {
         final TranslateAnimation animation = new TranslateAnimation(0.0f, 400.0f,
                 0.0f, 100f);
 
+        // Get BluetoothGattService data from DeviceControlActivity Intent!
+        Bundle b = getIntent().getExtras();
+        ArrayList<BluetoothGattService> gattServiceList = (ArrayList<BluetoothGattService>) b.getSerializable("gattService");
+        for ( BluetoothGattService service: gattServiceList){
+            Log.d("JOON I GOT INTENT", service.getUuid().toString());
+        }
+        mBluetoothGattService = findService(gattServiceList,SERVICE_UUID);
+        Log.d("I GOT BLESERVICE IN GAME ACTIVITY", BLEServiceContainer.getInstance().getBleService().toString());
 
         hammer.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -117,13 +139,17 @@ public class GameActivity extends AppCompatActivity {
                    // hammerHighlight.setVisibility(View.INVISIBLE);
                 }
                 else {
+
+                    writeOnMicro(mBluetoothGattService, CHARACTERISTIC_UUID, 0);
+                    Log.d("wrote on micro", "0");
+
                     if (fanTapCount < 5) { // Fan not broken yet!
                         Toast.makeText(getApplicationContext(), "Tap " + (5 - fanTapCount) + " more times!", Toast.LENGTH_SHORT).show();
                         fan.clearAnimation();
                         hammerTool.startAnimation(rotateAnimation);
                         fanTapCount++;
                     }
-                    else { // You broke the fan!
+                    else if (fanTapCount == 5){ // You broke the fan!
                         hammerTool.startAnimation(rotateAnimation);
                       //  fan.setVisibility(View.GONE);
                         //fanHighlight.setVisibility(View.GONE);
@@ -136,6 +162,10 @@ public class GameActivity extends AppCompatActivity {
                         s.addAnimation(swirlAnimation);
                         s.addAnimation(animation);
                         fan.startAnimation(s);
+                    }
+                    else {
+                        fan.setVisibility(View.GONE);
+                        hammerTool.setVisibility(View.GONE);
                     }
                 }
             }
@@ -155,7 +185,43 @@ public class GameActivity extends AppCompatActivity {
                 }
             }
         });
+    }
 
+    public BluetoothGattService findService(ArrayList<BluetoothGattService> services, String serviceUUID){
+        String uuid;
+        for (BluetoothGattService gattService : services) {
+            uuid = gattService.getUuid().toString();
+            if (uuid.equals(serviceUUID)) {
+                return gattService;
+            }
+        }
+        return null;
+    }
 
+    public void writeOnMicro (BluetoothGattService gattService, String characteristicUUID, int message){
+        List<BluetoothGattCharacteristic> mGattCharacteristics = gattService.getCharacteristics();
+        BluetoothGattCharacteristic charac = null;
+
+        if (mGattCharacteristics != null) {
+            for (BluetoothGattCharacteristic characteristic: mGattCharacteristics){
+                if (characteristic.getUuid().equals(characteristicUUID)){
+                    charac = characteristic;
+                }
+            }
+
+            if (charac != null) {
+                final int charaProp = charac.getProperties();
+                if ((charaProp | BluetoothGattCharacteristic.PERMISSION_WRITE) > 0) {               // Permission to write!
+                    byte[] writeValue = {(byte) message,(byte) message,(byte) message,(byte) message};
+                    charac.setValue(writeValue);
+                    String s1 = Arrays.toString(writeValue);
+                    Log.d("writeonmicro CHARACTERSITCI YASAMAN JAN", s1);
+
+                    BLEServiceContainer.getInstance().getBleService().writeCharacteristic(charac);
+                    // DON'T READ OR WRITE ANYTHING HERE! DOESN'T WORK, RETURNS NULL!
+                    // READ/WRITE IN ONCHARACTERISTICREAD/ONCHARACTERISTICWRITE IN BLUETOOTHLESERVICE.JAVA!!!!!!!!
+                }
+            }
+        }
     }
 }

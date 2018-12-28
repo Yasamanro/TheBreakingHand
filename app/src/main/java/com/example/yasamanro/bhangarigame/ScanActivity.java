@@ -32,8 +32,8 @@ import java.util.List;
 import java.util.Map;
 
 
-/*
-Handles finding BLE devices, filtering out the glove that we are looking for
+/**
+ * Handles finding BLE devices, filtering out the glove that we are looking for
 */
 public class ScanActivity extends AppCompatActivity {
 
@@ -51,8 +51,6 @@ public class ScanActivity extends AppCompatActivity {
 
     private boolean gloveFound;
     private BluetoothDevice glove;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

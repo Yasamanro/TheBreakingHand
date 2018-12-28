@@ -30,8 +30,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -63,9 +66,6 @@ public class BluetoothLeService extends Service {
             "com.example.bluetooth.le.ACTION_DATA_AVAILABLE";
     public final static String EXTRA_DATA =
             "com.example.bluetooth.le.EXTRA_DATA";
-
-    public final static UUID UUID_HEART_RATE_MEASUREMENT =
-            UUID.fromString(SampleGattAttributes.HEART_RATE_MEASUREMENT);
 
     // Implements callback methods for GATT events that the app cares about.  For example,
     // connection change and services discovered.
@@ -127,6 +127,19 @@ public class BluetoothLeService extends Service {
         }
 
         @Override
+        public void onCharacteristicWrite(BluetoothGatt gatt,
+                                          BluetoothGattCharacteristic characteristic,
+                                          int status){
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+                broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
+            }
+
+            byte[] dataInput = characteristic.getValue();
+            String s1 = Arrays.toString(dataInput);
+            Log.d("WRITTEN SUCCESS CHARACTERSITC YASAMAN JAN VALUE", s1);
+        }
+
+        @Override
         public void onCharacteristicChanged(BluetoothGatt gatt,
                                             BluetoothGattCharacteristic characteristic) {
             broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
@@ -141,37 +154,10 @@ public class BluetoothLeService extends Service {
     private void broadcastUpdate(final String action,
                                  final BluetoothGattCharacteristic characteristic) {
         final Intent intent = new Intent(action);
-
-        // This is special handling for the Heart Rate Measurement profile.  Data parsing is
-        // carried out as per profile specifications:
-        // http://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.heart_rate_measurement.xml
-        if (UUID_HEART_RATE_MEASUREMENT.equals(characteristic.getUuid())) {
-            int flag = characteristic.getProperties();
-            int format = -1;
-            if ((flag & 0x01) != 0) {
-                format = BluetoothGattCharacteristic.FORMAT_UINT16;
-                Log.d(TAG, "Heart rate format UINT16.");
-            } else {
-                format = BluetoothGattCharacteristic.FORMAT_UINT8;
-                Log.d(TAG, "Heart rate format UINT8.");
-            }
-            final int heartRate = characteristic.getIntValue(format, 1);
-            Log.d(TAG, String.format("Received heart rate: %d", heartRate));
-            intent.putExtra(EXTRA_DATA, String.valueOf(heartRate));
-        } else {
-            // For all other profiles, writes the data formatted in HEX.
-            final byte[] data = characteristic.getValue();
-            if (data != null && data.length > 0) {
-                final StringBuilder stringBuilder = new StringBuilder(data.length);
-                for(byte byteChar : data)
-                    stringBuilder.append(String.format("%02X ", byteChar));
-                intent.putExtra(EXTRA_DATA, new String(data) + "\n" + stringBuilder.toString());
-            }
-        }
         sendBroadcast(intent);
     }
 
-    public class LocalBinder extends Binder {
+    public class LocalBinder extends Binder{
         BluetoothLeService getService() {
             return BluetoothLeService.this;
         }
@@ -302,6 +288,21 @@ public class BluetoothLeService extends Service {
     }
 
     /**
+     * Request a write on a given {@code BluetoothGattCharacteristic}. The write result is reported
+     * asynchronously through the {@code BluetoothGattCallback#onCharacteristicWrite(android.bluetooth.BluetoothGatt, android.bluetooth.BluetoothGattCharacteristic, int)}
+     * callback.
+     *
+     * @param characteristic The characteristic to write to.
+     */
+    public void writeCharacteristic(BluetoothGattCharacteristic characteristic) {
+        if (mBluetoothAdapter == null || mBluetoothGatt == null) {
+            Log.w(TAG, "BluetoothAdapter not initialized");
+            return;
+        }
+        mBluetoothGatt.writeCharacteristic(characteristic);
+    }
+
+    /**
      * Enables or disables notification on a give characteristic.
      *
      * @param characteristic Characteristic to act on.
@@ -314,14 +315,6 @@ public class BluetoothLeService extends Service {
             return;
         }
         mBluetoothGatt.setCharacteristicNotification(characteristic, enabled);
-
-        // This is specific to Heart Rate Measurement.
-        if (UUID_HEART_RATE_MEASUREMENT.equals(characteristic.getUuid())) {
-            BluetoothGattDescriptor descriptor = characteristic.getDescriptor(
-                    UUID.fromString(SampleGattAttributes.CLIENT_CHARACTERISTIC_CONFIG));
-            descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-            mBluetoothGatt.writeDescriptor(descriptor);
-        }
     }
 
     /**
