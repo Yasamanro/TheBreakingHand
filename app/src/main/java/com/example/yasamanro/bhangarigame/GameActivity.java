@@ -300,6 +300,7 @@ public class GameActivity extends AppCompatActivity {
                     else {
                         fan.setVisibility(View.GONE);
                         hammerTool.setVisibility(View.GONE);
+                        //sdfsdfsdf
                     }
                 }
             }
