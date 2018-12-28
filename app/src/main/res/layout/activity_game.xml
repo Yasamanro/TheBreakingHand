@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="0.85"
-        android:background="@color/white">
+        android:background="@drawable/table">
 
         <ToggleButton
             android:id="@+id/hammerButton"
@@ -28,7 +28,8 @@
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:textOff=""
-            android:textOn="" />
+            android:textOn=""
+            android:soundEffectsEnabled="false"/>
 
         <Button
             android:id="@+id/hammerHighlight"
@@ -99,7 +100,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="0.15"
-        android:background="@color/colorAccent">
+        android:background="@drawable/table">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -116,12 +117,12 @@
 
                 <Button
                     android:id="@+id/fanButton"
-                    android:layout_width="162dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="161dp"
+                    android:layout_height="167dp"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginTop="26dp"
-                    android:layout_marginEnd="0dp"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginEnd="18dp"
                     android:background="@drawable/fan" />
 
                 <Button
@@ -137,34 +138,35 @@
                     android:layout_marginEnd="65dp"
                     android:layout_marginBottom="31dp"
                     android:background="@drawable/hammer_check"
-                    android:visibility="invisible"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
+                    android:soundEffectsEnabled="false"
                     android:textOff=""
-                    android:textOn="" />
+                    android:textOn=""
+                    android:visibility="invisible" />
 
                 <!--<Button-->
-                    <!--android:id="@+id/fanHighlight"-->
-                    <!--style="@style/HighlightStyle"-->
-                    <!--android:layout_width="22dp"-->
-                    <!--android:visibility="invisible"-->
-                    <!--android:background="@drawable/highlight_button"-->
-                    <!--android:layout_height="22dp"-->
-                    <!--android:layout_alignStart="@+id/fanButton"-->
-                    <!--android:layout_alignTop="@+id/fanButton"-->
-                    <!--android:layout_alignEnd="@+id/fanButton"-->
-                    <!--android:layout_alignBottom="@+id/fanButton"-->
-                    <!--android:layout_marginStart="60dp"-->
-                    <!--android:layout_marginTop="66dp"-->
-                    <!--android:layout_marginEnd="80dp"-->
-                    <!--android:layout_marginBottom="85dp" />-->
+                <!--android:id="@+id/fanHighlight"-->
+                <!--style="@style/HighlightStyle"-->
+                <!--android:layout_width="22dp"-->
+                <!--android:visibility="invisible"-->
+                <!--android:background="@drawable/highlight_button"-->
+                <!--android:layout_height="22dp"-->
+                <!--android:layout_alignStart="@+id/fanButton"-->
+                <!--android:layout_alignTop="@+id/fanButton"-->
+                <!--android:layout_alignEnd="@+id/fanButton"-->
+                <!--android:layout_alignBottom="@+id/fanButton"-->
+                <!--android:layout_marginStart="60dp"-->
+                <!--android:layout_marginTop="66dp"-->
+                <!--android:layout_marginEnd="80dp"-->
+                <!--android:layout_marginBottom="85dp" />-->
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.78"
-                android:background="@color/colorPrimary">
+                android:background="@drawable/table">
 
                 <Button
                     android:id="@+id/testButton"
@@ -177,10 +179,10 @@
                     android:text="Test➡" />
 
                 <RelativeLayout
+                    android:id="@+id/badge_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:id="@+id/badge_layout">
+                    android:layout_centerHorizontal="true">
 
                     <Button
                         android:id="@+id/basket"
@@ -196,13 +198,13 @@
                     android:id="@+id/badge_notification_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:shape="oval"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="16dp"
+                    android:shape="oval"
                     android:text="0"
                     android:textColor="#FFFF00"
                     android:textSize="16sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/scoreText"
@@ -210,8 +212,9 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="350dp"
+                    android:text="Your Score"
                     android:textStyle="bold"
-                    android:text="Your Score" />
+                    android:textColor="@color/white"/>
 
                 <TextView
                     android:id="@+id/score"

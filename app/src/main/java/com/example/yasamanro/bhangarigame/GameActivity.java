@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -74,14 +75,17 @@ public class GameActivity extends AppCompatActivity {
         final TranslateAnimation animation = new TranslateAnimation(0.0f, 400.0f,
                 0.0f, 100f);
 
+        // Sounds
+        final MediaPlayer hitMetalSound = MediaPlayer.create(this,R.raw.hitmetal);
+
         // Get BluetoothGattService data from DeviceControlActivity Intent!
-        Bundle b = getIntent().getExtras();
-        ArrayList<BluetoothGattService> gattServiceList = (ArrayList<BluetoothGattService>) b.getSerializable("gattService");
-        for ( BluetoothGattService service: gattServiceList){
-            Log.d("JOON I GOT INTENT", service.getUuid().toString());
-        }
-        mBluetoothGattService = findService(gattServiceList,SERVICE_UUID);
-        Log.d("I GOT BLESERVICE IN GAME ACTIVITY", BLEServiceContainer.getInstance().getBleService().toString());
+//        Bundle b = getIntent().getExtras();
+//        ArrayList<BluetoothGattService> gattServiceList = (ArrayList<BluetoothGattService>) b.getSerializable("gattService");
+//        for ( BluetoothGattService service: gattServiceList){
+//            Log.d("JOON I GOT INTENT", service.getUuid().toString());
+//        }
+//        mBluetoothGattService = findService(gattServiceList,SERVICE_UUID);
+//        Log.d("I GOT BLESERVICE IN GAME ACTIVITY", BLEServiceContainer.getInstance().getBleService().toString());
 
         hammer.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -140,18 +144,20 @@ public class GameActivity extends AppCompatActivity {
                 }
                 else {
 
-                    writeOnMicro(mBluetoothGattService, CHARACTERISTIC_UUID, 0);
+//                    writeOnMicro(mBluetoothGattService, CHARACTERISTIC_UUID, 0);
                     Log.d("wrote on micro", "0");
 
                     if (fanTapCount < 5) { // Fan not broken yet!
+                        hitMetalSound.start();
                         Toast.makeText(getApplicationContext(), "Tap " + (5 - fanTapCount) + " more times!", Toast.LENGTH_SHORT).show();
                         fan.clearAnimation();
                         hammerTool.startAnimation(rotateAnimation);
                         fanTapCount++;
                     }
                     else if (fanTapCount == 5){ // You broke the fan!
+                        hitMetalSound.start();
                         hammerTool.startAnimation(rotateAnimation);
-                      //  fan.setVisibility(View.GONE);
+                        //  fan.setVisibility(View.GONE);
                         //fanHighlight.setVisibility(View.GONE);
                         int basketCountTemp = Integer.parseInt(basketCount.getText().toString())+1;
                         basketCount.setText(Integer.toString(basketCountTemp));
@@ -159,9 +165,11 @@ public class GameActivity extends AppCompatActivity {
                         score.setText(Integer.toString(scoreCountTemp));
 
                         AnimationSet s = new AnimationSet(false);
+
                         s.addAnimation(swirlAnimation);
                         s.addAnimation(animation);
                         fan.startAnimation(s);
+                        fanTapCount++;
                     }
                     else {
                         fan.setVisibility(View.GONE);
