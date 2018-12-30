@@ -139,7 +139,7 @@ public class BluetoothLeService extends Service {
 
             byte[] dataInput = characteristic.getValue();
             String s1 = Arrays.toString(dataInput);
-            Log.d("WRITTEN SUCCESS CHARACTERSITC YASAMAN JAN VALUE", s1);
+            Log.d("SEARCHABLE WRITTEN SUCCESS CHARACTERSITC YASAMAN JAN VALUE", s1);
         }
 
         @Override

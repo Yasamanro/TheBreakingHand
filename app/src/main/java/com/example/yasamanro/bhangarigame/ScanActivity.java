@@ -99,7 +99,6 @@ public class ScanActivity extends AppCompatActivity {
                         mScanning = false;
                     }
                     startActivity(intent);
-                  //  mBluetoothGatt = glove.connectGatt(this,true, mGattCallback);
                 } else {
                     Toast.makeText(ScanActivity.this, "Scan for The Smart Glove first!", Toast.LENGTH_SHORT).show();
                 }
@@ -162,6 +161,7 @@ public class ScanActivity extends AppCompatActivity {
 
                         gloveFound = true;
                         glove = device;
+                        BLEServiceContainer.getInstance().setmDevice(device);
                         TextView deviceName = (TextView) findViewById(R.id.device_name);
                         deviceName.setText("Smart Glove");
                         TextView deviceAddr = (TextView) findViewById(R.id.device_address);
