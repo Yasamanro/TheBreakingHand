@@ -9,8 +9,6 @@ import java.util.ArrayList;
 public class BLEServiceContainer {
 
     private BluetoothLeService mBluetoothLeService;
-    private BluetoothDevice mDevice;
-    ArrayList<BluetoothGattService> mGattservices;
 
     private static BLEServiceContainer __instance;
 
@@ -29,24 +27,8 @@ public class BLEServiceContainer {
         mBluetoothLeService = service;
     }
 
-    public void setmDevice (BluetoothDevice device){
-        mDevice = device;
-    }
-
-    public void setmGattservices (ArrayList<BluetoothGattService> services) {
-        mGattservices = new ArrayList<>(services);
-    }
-
     public BluetoothLeService getBleService() {
         return mBluetoothLeService;
-    }
-
-    public BluetoothDevice getmDevice(){
-        return mDevice;
-    }
-
-    public ArrayList<BluetoothGattService> getmGattservices(){
-        return mGattservices;
     }
 }
 

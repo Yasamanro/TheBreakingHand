@@ -1,5 +1,6 @@
 package com.example.yasamanro.bhangarigame;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
@@ -9,6 +10,7 @@ import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -18,6 +20,7 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -33,6 +36,7 @@ public class GameActivity extends AppCompatActivity {
     final String CHARACTERISTIC_UUID = "beb5483e-36e1-4688-b7f5-ea07361b26a8";
     ArrayList<String> brokenItems;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,9 +50,11 @@ public class GameActivity extends AppCompatActivity {
 
         // Tools in action
         final Button hammerTool = findViewById(R.id.hammerTool);
+        final Button handTool = findViewById(R.id.handTool);
 
         //Hardware Parts
         final Button fan = findViewById(R.id.fanButton);
+        final Button ic  = findViewById(R.id.icButton);
 //        final Button fan1 = findViewById(R.id.fanButton1);
 //        final Button fan2 = findViewById(R.id.fanButton2);
 //        final Button fan3 = findViewById(R.id.fanButton3);
@@ -67,6 +73,9 @@ public class GameActivity extends AppCompatActivity {
         final TextView basketCount = findViewById(R.id.badge_notification_text);
         final TextView score = findViewById(R.id.score);
 
+        //Board Layout
+        RelativeLayout boardlayout = findViewById(R.id.boardcanvas);
+
         //Blink Animation
         final Animation blinkAnimation = new AlphaAnimation(1, 0); // Change alpha from fully invisible to visible
         blinkAnimation.setDuration(500); // duration - half a second
@@ -77,9 +86,11 @@ public class GameActivity extends AppCompatActivity {
         //Animation (rotate, swirl, move)
         final Animation rotateAnimation = AnimationUtils.loadAnimation(this, R.anim.rotate_anim);
         final Animation swirlAnimation = AnimationUtils.loadAnimation(this,R.anim.swirl_animation);
-//        final Animation moveAnimation = AnimationUtils.loadAnimation(this,R.anim.trainfade);
         final TranslateAnimation animation = new TranslateAnimation(0.0f, 400.0f,
                 0.0f, 100f);
+        final TranslateAnimation moveUpAnimation = new TranslateAnimation(0.0f, 0.0f,
+                800f, 0.0f);
+        moveUpAnimation.setDuration(1000);
 
         // Sounds
         final MediaPlayer hitMetalSound = MediaPlayer.create(this,R.raw.hitmetal);
@@ -89,6 +100,44 @@ public class GameActivity extends AppCompatActivity {
 
         // Get BluetoothGattService data from BLEServiceContainer and find the service we want!
         mBluetoothGattService = findService(BLEServiceContainer.getInstance().getBleService().getSupportedGattServices(),SERVICE_UUID);
+
+
+        ic.setOnTouchListener(new View.OnTouchListener() {
+            float y1 = 0, y2 = 0;
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {                          //gesture detector to detect swipe.
+                final int MIN_DISTANCE = 50;
+                if(!hand.isChecked()) {
+                    Toast.makeText(getApplicationContext(), "Select The Hand first!", Toast.LENGTH_SHORT).show();
+                    hand.startAnimation(blinkAnimation);
+                    view.clearAnimation();
+                }
+                else {
+                    switch(event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            y1 = event.getY();
+                            Log.d("Y1: ", Float.toString(y1));
+                            break;
+                        case MotionEvent.ACTION_UP:
+                            y2 = event.getY();
+                            Log.d("Y2: ", Float.toString(y2));
+                            float deltaX = y2 - y1;
+                            if (Math.abs(deltaX) > MIN_DISTANCE) {
+                                Log.d("DELTAX", Float.toString(deltaX));
+                                if (deltaX>0) {                             // Buttom to up!
+                                    Toast.makeText(GameActivity.this, "up2down swipe", Toast.LENGTH_SHORT).show();
+                                }
+                                else{                                       // Top to buttom!
+                                    Toast.makeText(GameActivity.this, "down2up swipe", Toast.LENGTH_SHORT).show();
+                                    handTool.startAnimation(moveUpAnimation);
+                                }
+                            }
+                            break;
+                    }
+                }
+                return true;                                //always return true to consume event
+            }
+        });
 
         hammer.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -131,6 +180,7 @@ public class GameActivity extends AppCompatActivity {
                     plier.setChecked(false);
                     screwdriver.setChecked(false);
                 }
+
             }
         });
 
@@ -155,7 +205,6 @@ public class GameActivity extends AppCompatActivity {
                         }
                     }
                 });
-
                 // create and show the alert dialog
                 AlertDialog dialog = builder.create();
                 dialog.show();

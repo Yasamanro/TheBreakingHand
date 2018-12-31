@@ -93,11 +93,6 @@ public class DeviceControlActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (mConnectionState.getText().equals("Connected")) {
                     Intent intent = new Intent(DeviceControlActivity.this, GameActivity.class);
-
-                    Bundle services = new Bundle();
-                    ArrayList<BluetoothGattService> gattServiceList = new ArrayList<BluetoothGattService>(BLEServiceContainer.getInstance().getBleService().getSupportedGattServices());
-                    services.putSerializable("gattService", gattServiceList);
-                    intent.putExtras(services);                         //Put service list in next Intent
                     startActivity(intent);
                 }
                 else {

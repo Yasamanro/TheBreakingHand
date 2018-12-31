@@ -161,7 +161,6 @@ public class ScanActivity extends AppCompatActivity {
 
                         gloveFound = true;
                         glove = device;
-                        BLEServiceContainer.getInstance().setmDevice(device);
                         TextView deviceName = (TextView) findViewById(R.id.device_name);
                         deviceName.setText("Smart Glove");
                         TextView deviceAddr = (TextView) findViewById(R.id.device_address);
