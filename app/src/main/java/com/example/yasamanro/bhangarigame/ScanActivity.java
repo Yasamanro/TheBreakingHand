@@ -19,6 +19,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -52,6 +55,8 @@ public class ScanActivity extends AppCompatActivity {
     private boolean gloveFound;
     private BluetoothDevice glove;
 
+    ImageView glove_selected;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +64,15 @@ public class ScanActivity extends AppCompatActivity {
 
         Button connectBtn = findViewById(R.id.connectButton);
         Button scanBtn = findViewById(R.id.scanButton);
+
+       glove_selected = findViewById(R.id.glove_selected);
+
+        // Blink Animation for Glove
+        final Animation blinkAnimation = new AlphaAnimation(1, 0);                          // Change alpha from fully invisible to visible
+        blinkAnimation.setDuration(600);                                                    // duration - half a second
+        blinkAnimation.setInterpolator(new LinearInterpolator());                           // do not alter animation rate
+        blinkAnimation.setRepeatCount(Animation.INFINITE);                                  // Repeat animation infinitely
+        blinkAnimation.setRepeatMode(Animation.REVERSE);                                    // Reverse animation at the end so the button will fade back in
 
         // Use this check to determine whether BLE is supported on the device.  Then you can
         // selectively disable BLE-related features.
@@ -83,7 +97,13 @@ public class ScanActivity extends AppCompatActivity {
         scanBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startScan();
+                if(!gloveFound) {
+                    glove_selected.startAnimation(blinkAnimation);
+                    startScan();
+                }
+                else {
+                    Toast.makeText(ScanActivity.this, "The Smart Glove is already found!\nPress Connect button.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -161,6 +181,7 @@ public class ScanActivity extends AppCompatActivity {
 
                         gloveFound = true;
                         glove = device;
+                        glove_selected.clearAnimation();
                         TextView deviceName = (TextView) findViewById(R.id.device_name);
                         deviceName.setText("Smart Glove");
                         TextView deviceAddr = (TextView) findViewById(R.id.device_address);

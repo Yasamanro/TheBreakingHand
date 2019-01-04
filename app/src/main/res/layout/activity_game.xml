@@ -209,26 +209,28 @@
                     android:layout_alignParentBottom="true"
                     android:layout_marginEnd="154dp"
                     android:layout_marginBottom="200dp"
-                    android:background="@drawable/ic" />
+                    android:background="@drawable/ic"
+                    />
 
                 <Button
                     android:id="@+id/handTool"
-                    android:layout_width="33dp"
-                    android:layout_height="45dp"
+                    android:layout_width="70dp"
+                    android:layout_height="91dp"
                     android:layout_alignStart="@+id/fanButton"
                     android:layout_alignTop="@+id/fanButton"
                     android:layout_alignEnd="@+id/fanButton"
                     android:layout_alignBottom="@+id/fanButton"
-                    android:layout_marginStart="-9dp"
-                    android:layout_marginTop="305dp"
-                    android:layout_marginEnd="141dp"
-                    android:layout_marginBottom="-174dp"
+                    android:layout_marginStart="-29dp"
+                    android:layout_marginTop="277dp"
+                    android:layout_marginEnd="125dp"
+                    android:layout_marginBottom="-192dp"
                     android:background="@drawable/hand_check"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
                     android:soundEffectsEnabled="false"
                     android:textOff=""
-                    android:textOn="" />
+                    android:textOn=""
+                    android:visibility="invisible"/>
 
 
                 <!--<Button-->
@@ -336,7 +338,5 @@
         </LinearLayout>
 
     </RelativeLayout>
-
-
 
 </LinearLayout>

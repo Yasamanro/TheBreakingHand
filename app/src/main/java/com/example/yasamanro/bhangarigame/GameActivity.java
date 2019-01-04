@@ -88,8 +88,11 @@ public class GameActivity extends AppCompatActivity {
         final Animation swirlAnimation = AnimationUtils.loadAnimation(this,R.anim.swirl_animation);
         final TranslateAnimation animation = new TranslateAnimation(0.0f, 400.0f,
                 0.0f, 100f);
+        final TranslateAnimation moveDownAnimation = new TranslateAnimation(0.0f, 0.0f,
+                -400f, 0.0f);
         final TranslateAnimation moveUpAnimation = new TranslateAnimation(0.0f, 0.0f,
-                800f, 0.0f);
+                0.0f, -400f);
+        moveDownAnimation.setDuration(1000);
         moveUpAnimation.setDuration(1000);
 
         // Sounds
@@ -99,7 +102,7 @@ public class GameActivity extends AppCompatActivity {
         brokenItems = new ArrayList<>();
 
         // Get BluetoothGattService data from BLEServiceContainer and find the service we want!
-        mBluetoothGattService = findService(BLEServiceContainer.getInstance().getBleService().getSupportedGattServices(),SERVICE_UUID);
+        //mBluetoothGattService = findService(BLEServiceContainer.getInstance().getBleService().getSupportedGattServices(),SERVICE_UUID);
 
 
         ic.setOnTouchListener(new View.OnTouchListener() {
@@ -124,11 +127,10 @@ public class GameActivity extends AppCompatActivity {
                             float deltaX = y2 - y1;
                             if (Math.abs(deltaX) > MIN_DISTANCE) {
                                 Log.d("DELTAX", Float.toString(deltaX));
-                                if (deltaX>0) {                             // Buttom to up!
-                                    Toast.makeText(GameActivity.this, "up2down swipe", Toast.LENGTH_SHORT).show();
+                                if (deltaX>0) {                             // Up to Bottom Swipe
+                                    handTool.startAnimation(moveDownAnimation);
                                 }
-                                else{                                       // Top to buttom!
-                                    Toast.makeText(GameActivity.this, "down2up swipe", Toast.LENGTH_SHORT).show();
+                                else{                                       // Bottom to Up Swipe
                                     handTool.startAnimation(moveUpAnimation);
                                 }
                             }
@@ -224,8 +226,7 @@ public class GameActivity extends AppCompatActivity {
                    // hammerHighlight.setVisibility(View.INVISIBLE);
                 }
                 else {
-
-                    writeOnMicro(mBluetoothGattService, CHARACTERISTIC_UUID, 0);
+                   // writeOnMicro(mBluetoothGattService, CHARACTERISTIC_UUID, 0);
                     Log.d("wrote on micro", "0");
 
 //                    switch (fanTapCount){
@@ -330,14 +331,11 @@ public class GameActivity extends AppCompatActivity {
                         s.addAnimation(swirlAnimation);
                         s.addAnimation(animation);
                         fan.startAnimation(s);
+                        fan.setVisibility(View.GONE);
+                        hammerTool.setVisibility(View.GONE);
 
                         brokenItems.add("Fan");
                         fanTapCount++;
-                    }
-                    else {
-                        fan.setVisibility(View.GONE);
-                        hammerTool.setVisibility(View.GONE);
-                        //sdfsdfsdf
                     }
                 }
             }
@@ -351,8 +349,9 @@ public class GameActivity extends AppCompatActivity {
                 } else {
                     Intent intent = new Intent(GameActivity.this, TestActivity.class);
                     Bundle b = new Bundle();
-                    b.putString("part","fan");                   // Part
-                    intent.putExtras(b);                         //Put part id to next Intent
+                    b.putStringArrayList("brokens",brokenItems);
+                    b.putInt("score", Integer.parseInt(score.getText().toString()));
+                    intent.putExtras(b);                         // Put broken parts Arraylist to next Intent
                     startActivity(intent);
                 }
             }

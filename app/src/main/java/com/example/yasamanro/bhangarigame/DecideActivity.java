@@ -8,8 +8,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
+
 
 public class DecideActivity extends AppCompatActivity {
+
+    ArrayList<String> brokenItems;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -27,7 +31,9 @@ public class DecideActivity extends AppCompatActivity {
         ImageView currentObject = null;
         Bundle b = getIntent().getExtras();
         String part = "";
-        if(b != null)
+        if(b != null){
+            brokenItems = b.getStringArrayList("brokens");
+        }
             part = b.getString("part");
         if (part.equals("fan")){
             ImageView obj = findViewById(R.id.fanObject);
