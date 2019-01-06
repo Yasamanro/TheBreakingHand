@@ -106,6 +106,7 @@ public class GameActivity extends AppCompatActivity {
 
 
         ic.setOnTouchListener(new View.OnTouchListener() {
+            int icTouchCount = 0;
             float y1 = 0, y2 = 0;
             @Override
             public boolean onTouch(View view, MotionEvent event) {                          //gesture detector to detect swipe.
@@ -129,9 +130,33 @@ public class GameActivity extends AppCompatActivity {
                                 Log.d("DELTAX", Float.toString(deltaX));
                                 if (deltaX>0) {                             // Up to Bottom Swipe
                                     handTool.startAnimation(moveDownAnimation);
+                                    if (icTouchCount < 4) {                                                  // IC not broken yet!
+                                        Toast.makeText(getApplicationContext(), "Touch " + (4 - icTouchCount) + " more times!", Toast.LENGTH_SHORT).show();
+                                        icTouchCount++;
+                                    }
+                                    if (icTouchCount == 4) {                                                 // You broke the fan!
+                                        ic.setVisibility(View.GONE);
+                                        int basketCountTemp = Integer.parseInt(basketCount.getText().toString())+1;
+                                        basketCount.setText(Integer.toString(basketCountTemp));
+                                        int scoreCountTemp = Integer.parseInt(score.getText().toString())+1;
+                                        score.setText(Integer.toString(scoreCountTemp));
+                                        brokenItems.add("IC");
+                                    }
                                 }
                                 else{                                       // Bottom to Up Swipe
                                     handTool.startAnimation(moveUpAnimation);
+                                    if (icTouchCount < 4) {                                                  // IC not broken yet!
+                                        Toast.makeText(getApplicationContext(), "Touch " + (4 - icTouchCount) + " more times!", Toast.LENGTH_SHORT).show();
+                                        icTouchCount++;
+                                    }
+                                    if (icTouchCount == 4) {                                                 // You broke the fan!
+                                        ic.setVisibility(View.GONE);
+                                        int basketCountTemp = Integer.parseInt(basketCount.getText().toString())+1;
+                                        basketCount.setText(Integer.toString(basketCountTemp));
+                                        int scoreCountTemp = Integer.parseInt(score.getText().toString())+1;
+                                        score.setText(Integer.toString(scoreCountTemp));
+                                        brokenItems.add("IC");
+                                    }
                                 }
                             }
                             break;
@@ -326,11 +351,11 @@ public class GameActivity extends AppCompatActivity {
                         int scoreCountTemp = Integer.parseInt(score.getText().toString())+1;
                         score.setText(Integer.toString(scoreCountTemp));
 
-                        AnimationSet s = new AnimationSet(false);
-
-                        s.addAnimation(swirlAnimation);
-                        s.addAnimation(animation);
-                        fan.startAnimation(s);
+//                        AnimationSet s = new AnimationSet(false);
+//
+//                        s.addAnimation(swirlAnimation);
+//                        s.addAnimation(animation);
+//                        fan.startAnimation(s);
                         fan.setVisibility(View.GONE);
                         hammerTool.setVisibility(View.GONE);
 

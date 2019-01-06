@@ -33,6 +33,7 @@ public class TestActivity extends AppCompatActivity {
         Button decideButton = findViewById(R.id.decideButton);
 
         ImageView currentObject = null;
+        ImageView fan = findViewById(R.id.fan);
         final MediaPlayer shakeSound = MediaPlayer.create(this,R.raw.shake);
 
         final TextView basketCount = findViewById(R.id.badge_notification_text);
@@ -80,8 +81,8 @@ public class TestActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
-                            case 0: // horse
-                            case 1: // cow
+                            case 0: fan.setVisibility(View.VISIBLE);
+                            case 1: fan.setVisibility(View.VISIBLE);
                             case 2: // camel
                             case 3: // sheep
                             case 4: // goat
@@ -99,8 +100,9 @@ public class TestActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(TestActivity.this, DecideActivity.class);
                 Bundle b = new Bundle();
-                b.putString("part","fan");                   // Part
-                intent.putExtras(b);                         //Put part id to next Intent
+                b.putStringArrayList("brokens",brokenItems);
+                b.putInt("score", Integer.parseInt(score.getText().toString()));
+                intent.putExtras(b);                         // Put broken parts Arraylist to next Intent
                 startActivity(intent);
             }
         });
